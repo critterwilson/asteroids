@@ -1,0 +1,92 @@
+###############################################################
+# Program:
+#     Milestone 12, Asteroids
+#     Brother Comeau, CS165
+# Author:
+#     Christopher Wilson
+# Summary:
+#     This is a game of astroids. It is a game that uses lists, vectors,
+#     and dynamic allocation to create a smoothly flowing game. 
+# Above and Beyond:
+#     1. The fist thing I added was a shield system for the ship.
+#     It is not just a simple shield, it had a limit. As you use
+#     the shield, itshealth runs out. Coming in contact with an
+#     astroid hurtsthe shield more as well.
+#     2. The second thing I added was a display for the shield
+#     health at the top left of the screen
+#     3. The third change I added was to make the astroids reset
+#     the last of the previous set is destroyed. This allows the
+#     user to challenge themselves for as long as they can last
+#     4. I made a display for when the ship dies that says
+#     MISSION FAILED with fire showing where the ship died
+###############################################################
+
+
+LFLAGS = -lglut -lGLU -lGL
+
+###############################################################
+# Build the main game
+###############################################################
+a.out: driver.o game.o uiInteract.o uiDraw.o point.o ship.o velocity.o bigRock.o mediumRock.o smallRock.o astroid.o bullet.o flyingObject.o 
+	g++ driver.o game.o uiInteract.o uiDraw.o point.o ship.o velocity.o bigRock.o smallRock.o mediumRock.o astroid.o bullet.o flyingObject.o $(LFLAGS)
+
+###############################################################
+# Individual files
+#    uiDraw.o      Draw polygons on the screen and do all OpenGL graphics
+#    uiInteract.o  Handles input events
+#    point.o       The position on the screen
+#    ground.o      Handles the ground / world
+#    game.o        Handles the game interaction
+###############################################################
+uiDraw.o: uiDraw.cpp uiDraw.h point.h
+	g++ -c uiDraw.cpp
+
+uiInteract.o: uiInteract.cpp uiInteract.h
+	g++ -c uiInteract.cpp
+
+point.o: point.cpp point.h
+	g++ -c point.cpp
+
+game.o: game.cpp uiDraw.h uiInteract.h point.h ship.h bullet.h astroid.h bigRock.h mediumRock.h smallRock.h
+	g++ -c game.cpp
+
+driver.o: game.h uiInteract.h driver.cpp
+	g++ -c driver.cpp
+
+ship.o: ship.h flyingObject.h uiDraw.h ship.cpp
+	g++ -c ship.cpp
+
+bullet.o: bullet.h bullet.cpp flyingObject.h uiDraw.h
+	g++ -c bullet.cpp
+
+velocity.o: velocity.h velocity.cpp
+	g++ -c velocity.cpp
+
+smallRock.o: smallRock.h smallRock.cpp astroid.h
+	g++ -c smallRock.cpp
+
+mediumRock.o: mediumRock.h mediumRock.cpp astroid.h
+	g++ -c mediumRock.cpp
+
+bigRock.o: astroid.h uiDraw.h bigRock.h bigRock.cpp
+	g++ -c bigRock.cpp
+
+astroid.o: flyingObject.h astroid.h astroid.cpp
+	g++ -c astroid.cpp
+
+flyingObject.o: velocity.h point.h flyingObject.h flyingObject.cpp
+	g++ -c flyingObject.cpp
+
+
+#######################################################################
+# ADD YOUR ADDITIONAL RULES HERE!
+#
+# Then, don't forget to add them to the dependecy list for a.out above.
+#######################################################################
+
+
+###############################################################
+# General rules
+###############################################################
+clean:
+	rm a.out *.o
